@@ -22,6 +22,7 @@ describe('HeroesComponent', () => {
 
   describe('delete', () => {
 
+    //state-based test, abbiamo controllato che loi state del component sia cambiato
     it('it should remove the indicated hero from the hero list', () => {
       mockHeroService.deleteHero.and.returnValue(of(true))
 
@@ -32,6 +33,19 @@ describe('HeroesComponent', () => {
       component.delete(heroToDelete);
 
       expect(component.heroes.includes(heroToDelete)).toBeFalsy();
+    });
+
+    //interaction test
+    it('should call deleteHero', () => {
+      mockHeroService.deleteHero.and.returnValue(of(true))
+
+      component.heroes = herosMock;
+
+      let heroToDelete = herosMock[2];
+
+      component.delete(heroToDelete);
+
+      expect(mockHeroService.deleteHero).toHaveBeenCalledWith(heroToDelete);
     })
   })
 })
