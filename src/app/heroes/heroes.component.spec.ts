@@ -1,3 +1,4 @@
+import { of } from 'rxjs';
 import { HeroesComponent } from './../heroes/heroes.component';
 
 describe('HeroesComponent', () => {
@@ -17,5 +18,20 @@ describe('HeroesComponent', () => {
     mockHeroService = jasmine.createSpyObj(['getHeroes', 'addHero', 'deleteHero'])
 
     component = new HeroesComponent(mockHeroService)
+  })
+
+  describe('delete', () => {
+
+    it('it should remove the indicated hero from the hero list', () => {
+      mockHeroService.deleteHero.and.returnValue(of(true))
+
+      component.heroes = herosMock;
+
+      let heroToDelete = herosMock[2];
+
+      component.delete(heroToDelete);
+
+      expect(component.heroes.includes(heroToDelete)).toBeFalsy();
+    })
   })
 })
