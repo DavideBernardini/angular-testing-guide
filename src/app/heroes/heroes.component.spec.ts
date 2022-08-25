@@ -64,6 +64,7 @@ describe('HeroesComponent (shallow tests)', () => {
   let herosMock;
   let mockHeroService;
 
+  // mock del child component
   @Component({
     selector: 'app-hero',
     template: '<div></div>',
@@ -150,6 +151,12 @@ describe('HeroesComponent (deep tests)', () => {
     //run ngOnInit
     fixture.detectChanges();
 
-    fixture.debugElement.queryAll(By.directive)
+    // in angular un componente é una sottoclasse di una directive, un tipo più specializzato di directive
+    const heroComponentDEs = fixture.debugElement.queryAll(By.directive(HeroComponent));
+
+    expect(heroComponentDEs.length).toEqual(3);
+
+    for(let i = 0; i < heroComponentDEs.length; i++)
+      expect(heroComponentDEs[i].componentInstance.hero).toEqual(herosMock[i]);
   })
 });

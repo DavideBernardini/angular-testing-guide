@@ -9,7 +9,7 @@ describe('HeroComponent (shallow test)', () => {
 
   beforeEach(() => {
     // il TestBed e' una utility che ci permette di testare sia un componente sia il suo template. Creiamo in pratica un modulo speciale solo per il fine dl test
-    // configureTestingModule prende un parametro che e' un oggetto che corrisponde nel layout ad app.module, ma a noi ci interessa solo la sezione declaration e in determinate circostanze di providers
+    // configureTestingModule prende un parametro che e' un oggetto che corrisponde nel layout ad app.module, ma a noi (per ora) interessa solo la sezione declaration e in determinate circostanze i providers
     TestBed.configureTestingModule({
       declarations: [HeroComponent],
       schemas: [NO_ERRORS_SCHEMA]
@@ -36,14 +36,14 @@ describe('HeroComponent (shallow test)', () => {
     expect(fixture.componentInstance.hero.name).toEqual('superman');
   });
 
-  it('should render the hero name in an ancvhor tag', () => {
+  it('should render the hero name in an anchor tag', () => {
     fixture.componentInstance.hero = {
       id: 1,
       name: 'superman',
       strength: 50
     };
 
-    //finche' non si va partire la ricerca dei cambiamenti non avviene il binding della proprieta' del template
+    //finche' non si fa partire la ricerca dei cambiamenti non avviene il binding della proprieta' del template
     fixture.detectChanges();
 
     //nativeElement si aggancia all'elemento del dom che contiene il template
