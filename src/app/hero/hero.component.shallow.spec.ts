@@ -1,6 +1,7 @@
 import { HeroComponent } from './hero.component';
 import { ComponentFixture, TestBed } from "@angular/core/testing"
 import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { By } from '@angular/platform-browser';
 
 describe('HeroComponent (shallow test)', () => {
 
@@ -46,6 +47,10 @@ describe('HeroComponent (shallow test)', () => {
     fixture.detectChanges();
 
     //nativeElement si aggancia all'elemento del dom che contiene il template
-    expect(fixture.nativeElement.querySelector('a').textContent).toContain('superman')
+    expect(fixture.nativeElement.querySelector('a').textContent).toContain('superman');
+
+    //versione con debugElement, ma perchè? Perchè come fixture è un wrapper che aggiunge ulteriori attività che potrebbero essere utili
+    // let deA = fixture.debugElement.query(By.css('a'));
+    // expect(deA.nativeElement.querySelector('a').textContent).toContain('superman');
   })
 })
