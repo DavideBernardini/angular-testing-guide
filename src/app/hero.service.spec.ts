@@ -38,9 +38,7 @@ describe('HeroService', () => {
     // invece di una empty function uso inject che prende due parametri, un array e una callbnack
     it('should call get with the correct URL', () => {
       //call getHero() e passo un parametro per l'id e faccio il subscribe visto che ritorna un observable e quindi per far partire la chiamata
-      service.getHero(4).subscribe(hero => {
-        //expect(hero.id).toEqual(4);
-      });
+      service.getHero(4).subscribe();
 
       //test that URL was correct
       // diciamo al testing controler che ci dovrà essere una GET request e vogliamo che si aspetti che avvenga. Per questo usiamo expectOne() che accetta come un url come parametro e si aspetta che corrisponda a quello della chiamata e ritorna un mock
