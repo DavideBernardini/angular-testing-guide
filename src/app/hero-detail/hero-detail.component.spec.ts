@@ -1,5 +1,5 @@
 import { FormsModule } from '@angular/forms';
-import { ComponentFixture, fakeAsync, tick } from '@angular/core/testing';
+import { ComponentFixture, fakeAsync, flush, tick } from '@angular/core/testing';
 import { HeroService } from './../hero.service';
 import { ActivatedRoute } from '@angular/router';
 import { HeroDetailComponent } from './hero-detail.component';
@@ -46,7 +46,7 @@ describe('HeroDetailComponent', () => {
   ////////////////////////////
   ///////async test//////////
   //////////////////////////
-  // utilizzo la fake async function, in pratica wrappo la callback del test con una chiamata fakeAsync in modo da trattare il nostro codice asincrono come sincrono e controlla il clock mentre il test runna. "asyncZone"
+  // utilizzo la fake async function, in pratica wrappo la callback del test con una chiamata fakeAsync in modo da trattare il nostro codice asincrono come sincrono e controlla il clock mentre il test runna.
   it('should call updateHero when save is called', fakeAsync(() => {
     //dobbiamo dire all'heroService di ritornare un observable
     mockHeroService.updateHero.and.returnValue(of({}));
@@ -55,7 +55,10 @@ describe('HeroDetailComponent', () => {
     // chiamo il metodo save
     fixture.componentInstance.save();
 
-    tick(250);
+    //tick(250);
+
+    //se non sapessimo quanto attendere possiamo usare flush che controlla nel zone js che ci siano delle task in attesa, se ci sono porta avanti l'orologio finchè non vengono eseguite
+    flush();
 
     expect(mockHeroService.updateHero).toHaveBeenCalled();
   }));
