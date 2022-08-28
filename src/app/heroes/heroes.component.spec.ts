@@ -154,9 +154,77 @@ describe('HeroesComponent (deep tests)', () => {
     // in angular un componente é una sottoclasse di una directive, un tipo più specializzato di directive
     const heroComponentDEs = fixture.debugElement.queryAll(By.directive(HeroComponent));
 
-    expect(heroComponentDEs.length).toEqual(3);
-
     for(let i = 0; i < heroComponentDEs.length; i++)
       expect(heroComponentDEs[i].componentInstance.hero).toEqual(herosMock[i]);
-  })
+  });
+
+  //in questo caso abbiamo triggerato un evento tramite l'elemento html
+  it(`should call heroService.deleteHero when the Hero Components delete button is called (html)`, () => {
+
+    //con spyOn diciamo a jasmine di trovare il metodo delete nel nostro HeroComponent e controllarlo, se viene chiamato
+    spyOn(fixture.componentInstance, 'delete');
+
+    mockHeroService.getHeroes.and.returnValue(of(herosMock));
+
+    fixture.detectChanges();
+
+    const heroComponents = fixture.debugElement.queryAll(By.directive(HeroComponent));
+
+    ////con trigerEventHandler indichiamo l'evento da triggerare e l'oggetto che va ritornato.
+    //In questo caso vogliamo che abbia un metodo stopPropagation, può anche esere un metodo vuoto tanto vogliamo solo che sia chiamato
+    heroComponents[0].query(By.css('button'))
+      .triggerEventHandler('click', {stopPropagation : () => {}});
+
+    //questa può essere una versione stringata ma che testa meno
+    heroComponents[0].triggerEventHandler('delete', undefined);
+
+    expect(fixture.componentInstance.delete).toHaveBeenCalledWith(herosMock[0]);
+  });
+
+  //rispetto al precedente test in questa versione possiamo dire al child component di attivare il delete() senza triggerarlo tramite l'html
+  it(`should call heroService.deleteHero when the Hero Components delete button is called (only method)`, () => {
+
+    //con spyOn diciamo a jasmine di trovare il metodo delete nel nostro HeroComponent e controllarlo, se viene chiamato
+    spyOn(fixture.componentInstance, 'delete');
+
+    mockHeroService.getHeroes.and.returnValue(of(herosMock));
+
+    fixture.detectChanges();
+
+    const heroComponents = fixture.debugElement.queryAll(By.directive(HeroComponent));
+
+    //heroComponents è un array di elementi per debuggare, prendiamo il primo, lo tipizziamo come HeroComponent e con componentInstance prendiamo la classe del componente, HeroComponent. Così richiamiamo il metodo delete e (essendo un event emitter) emittiamo un valore undefined giusto per far partire l'evento (in effetti )
+    (<HeroComponent>heroComponents[0].componentInstance).delete.emit(undefined);
+
+    expect(fixture.componentInstance.delete).toHaveBeenCalledWith(herosMock[0]);
+  });
+
+  ///////////////////////////////////
+  ////////// gestire input /////////
+  /////////////////////////////////
+  it('should add a new hero to the hero list when add button is clicked', () => {
+
+    mockHeroService.getHeroes.and.returnValue(of(herosMock));
+    fixture.detectChanges();
+    // dato che andremo a creare un nuovo hero e ciò che prendiamo dall'input è il nome, creo una variabile
+    const name = 'batman';
+    //dato che addHero nel beforeEach lo abbiamo mockato non facendogli ritorniare niente, facciamo questo
+    mockHeroService.addHero.and.returnValue(of({id: 5, name: name, strength: 160}));
+
+    const inputElement = fixture.debugElement.query(By.css('input')).nativeElement; //native element per avere un riferimento nel dom dell'elemento di debugelement
+
+    const addButton = fixture.debugElement.queryAll(By.css('button'))[0];
+
+    //simuliamo il digitare il nome nell'input
+    inputElement.value = name;
+
+    //passare null perchè in questo caso l'event object non importa in questo caso (non viene usato)
+    addButton.triggerEventHandler('click', null);
+
+    fixture.detectChanges(); // aggiorniamo l'html
+
+    const heroText = fixture.debugElement.query(By.css('ul')).nativeElement.textContent
+
+    expect(heroText).toContain(name);
+  });
 });
