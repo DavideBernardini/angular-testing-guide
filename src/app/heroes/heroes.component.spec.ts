@@ -22,6 +22,7 @@ export class RouterLinkDirectiveStub {
   }
 }
 
+//isoleted unit test
 describe('HeroesComponent', () => {
   //definisco variabile pr il component
   let component: HeroesComponent
@@ -43,7 +44,7 @@ describe('HeroesComponent', () => {
 
   describe('delete', () => {
 
-    //state-based test, abbiamo controllato che loi state del component sia cambiato
+    //state-based test, abbiamo controllato che lo state del component sia cambiato
     it('it should remove the indicated hero from the hero list', () => {
       mockHeroService.deleteHero.and.returnValue(of(true))
 
@@ -71,7 +72,7 @@ describe('HeroesComponent', () => {
   })
 })
 
-// SHALLOW TESTS
+// shallow integration test
 describe('HeroesComponent (shallow tests)', () => {
   let fixture: ComponentFixture<HeroesComponent>;
 
