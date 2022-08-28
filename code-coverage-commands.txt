@@ -1,0 +1,9 @@
+ng test --no-watch --code-coverage
+
+crea un coverage report, uno snapshot dello stato corrente degli unit test, ti dice quale codice è testato e quale no
+
+
+npm install karma-firefox-launcher --save-dev
+
+per usare karma con firefox
+https://www.npmjs.com/package/karma-firefox-launcher

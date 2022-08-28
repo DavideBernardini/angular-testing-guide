@@ -1,5 +1,5 @@
 import { FormsModule } from '@angular/forms';
-import { ComponentFixture, fakeAsync, flush, tick } from '@angular/core/testing';
+import { ComponentFixture, fakeAsync, flush, tick, waitForAsync } from '@angular/core/testing';
 import { HeroService } from './../hero.service';
 import { ActivatedRoute } from '@angular/router';
 import { HeroDetailComponent } from './hero-detail.component';
@@ -61,5 +61,18 @@ describe('HeroDetailComponent', () => {
     flush();
 
     expect(mockHeroService.updateHero).toHaveBeenCalled();
+  }));
+
+  //un altro modo che viene da angular testing per fare tewst asincroni, questo esempio ha un metodo save con dentro una promise che lo rende asincrono
+  it('should call updateHero when save is called 2', waitForAsync(() => {
+    mockHeroService.updateHero.and.returnValue(of({}));
+    fixture.detectChanges();
+
+    fixture.componentInstance.save2();
+
+    //dobbiamo dire al nostro test di atendere che la pomise sia risolta. usiamo whenstable che dice di attendere per riprendere il test dopo che le eventuali promise siano risolte
+    fixture.whenStable().then(() => {
+      expect(mockHeroService.updateHero).toHaveBeenCalled();
+    })
   }));
 });
